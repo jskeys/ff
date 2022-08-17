@@ -35,9 +35,12 @@ def create_dataframe_from_url(url):
     if len(starts) > 1:
         raise RuntimeError("URL HTML contains more than one table start tag")
 
-    df = pd.read_html("\n".join(lines[starts[0]:stops[0]]))
+    dfs = pd.read_html("\n".join(lines[starts[0] : stops[0]]))
 
-    return df
+    return dfs[0]
+
 
 for url in URLS:
-    print(create_dataframe_from_url(url))
+    csv_name = url.rsplit("/")[-1] + ".csv"
+    create_dataframe_from_url(url).to_csv(csv_name)
+    print(f"Wrote {csv_name}")
